@@ -11,11 +11,19 @@ import (
 	"time"
 
 	"github.com/gin-contrib/pprof"
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
+
+	// gin init
 	r := gin.Default()
+
+	store := cookie.NewStore([]byte("mySec"))
+
+	r.Use(sessions.Sessions("cms-session", store))
 
 	// middleware register
 	pprof.Register(r)
@@ -28,6 +36,8 @@ func main() {
 			"message": "pong",
 		})
 	})
+
+	// start the service
 
 	server := &http.Server{
 		Addr:    ":8080",
